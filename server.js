@@ -16,11 +16,33 @@ mongoose.connection.on('connected', () => {
 mongoose.connection.on('error', err => console.error('Mongo error:', err.message));
 
 /* ---------- Core middleware ---------- */
-app.use(cors({ origin: (process.env.CORS_ORIGIN || '*').split(',') }));
-app.use(express.json({ limit: '1mb' }));
+// Allow configuring CORS via CORS_ORIGIN env var (comma separated). If not set,
+// allow the common dev origins used by frontends (localhost:5173) and fallback to '*'.
+const allowed = (process.env.CORS_ORIGIN || 'http://127.0.0.1:5173,http://localhost:5173,*')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
+app.use(logger('dev'));
 app.use(helmet());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }));
-app.use(logger('dev'));
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowed.includes('*')) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  } else if (origin && allowed.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  // Handle preflight
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
+app.use(express.json({ limit: '1mb' }));
 
 /* ---------- Health ---------- */
 app.get('/health', (_req, res) => res.json({ ok: true, service: 'ai-inbox', version: '0.1.0' }));
