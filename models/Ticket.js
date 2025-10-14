@@ -25,7 +25,6 @@ const TicketSchema = new mongoose.Schema(
 // text search on intent + raw message
 TicketSchema.index({ intent: 'text', message_raw: 'text' });
 
-// Make `_id` -> `id` and hide internals (like your Evently models)
 TicketSchema.set('toJSON', {
   transform: (_doc, ret) => {
     ret.id = ret._id.toString();
