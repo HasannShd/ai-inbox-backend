@@ -29,3 +29,11 @@ there is middleware for vaidation
 the ai is given the conditions as per the test requirements if message contains urgent words it gives high priority otherwise if within 48hrs detected is medium and otherwise low
 
 testing has been done multiple times to make sure of functionality 
+
+# .env.example  (safe to commit)
+PORT=3000
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-host>/<db-name>?retryWrites=true&w=majority
+AI_BASE_URL=https://api.groq.com/openai
+AI_API_KEY=sk-... # put your Groq key here
+AI_MODEL=llama-3.1-8b-instruct
+
