@@ -16,8 +16,6 @@ mongoose.connection.on('connected', () => {
 mongoose.connection.on('error', err => console.error('Mongo error:', err.message));
 
 /* ---------- Core middleware ---------- */
-// Allow configuring CORS via CORS_ORIGIN env var (comma separated). If not set,
-// allow the common dev origins used by frontends (localhost:5173) and fallback to '*'.
 const allowed = (process.env.CORS_ORIGIN || 'http://127.0.0.1:5173,http://localhost:5173,*')
   .split(',')
   .map(s => s.trim())

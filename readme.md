@@ -30,7 +30,7 @@ the ai is given the conditions as per the test requirements if message contains 
 
 testing has been done multiple times to make sure of functionality 
 
-# .env.example  (safe to commit)
+# .env.example 
 PORT=3000
 MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-host>/<db-name>?retryWrites=true&w=majority
 AI_BASE_URL=https://api.groq.com/openai
